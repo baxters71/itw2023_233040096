@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Responsive Navbar — Flexbox</title>
+  <style>
+    /* Reset ringan */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;line-height:1.4}
+
+    /* Header / navbar */
+    .site-header{background:#0f172a;color:#fff}
+    .container{max-width:1100px;margin:0 auto;padding:0 1rem}
+
+    nav.navbar{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0}
+
+    /* Brand */
+    .brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.1rem}
+    .brand img{width:36px;height:36px;border-radius:6px;object-fit:cover}
+
+    /* Nav links (desktop) */
+    .nav-links{display:flex;gap:1rem;align-items:center}
+    .nav-links a{color:inherit;text-decoration:none;padding:.45rem .6rem;border-radius:6px;transition:background .15s}
+    .nav-links a:hover{background:rgba(255,255,255,0.06)}
+
+    /* Call-to-action button */
+    .btn{background:#06b6d4;color:#042; padding:.45rem .8rem;border-radius:8px;font-weight:600}
+    .btn:hover{opacity:.95}
+
+    /* Hamburger (mobile) */
+    .hamburger{display:none;background:transparent;border:0;color:inherit;font-size:1.25rem;padding:.4rem;border-radius:6px}
+
+    /* Mobile menu (hidden by default) */
+    .mobile-menu{display:none;flex-direction:column;padding:.75rem 0;gap:.25rem}
+    .mobile-menu a{display:block;padding:.6rem;border-radius:6px}
+    .mobile-menu a:hover{background:rgba(255,255,255,0.04)}
+
+    /* Layout utilities */
+    .spacer{flex:1}
+
+    /* Accessibility focus */
+    a:focus, button:focus{outline:3px solid rgba(6,182,212,0.35);outline-offset:3px}
+
+    /* Responsive rules */
+    @media (max-width: 768px){
+      .nav-links{display:none}
+      .hamburger{display:inline-flex;align-items:center;gap:.4rem}
+      .mobile-menu{display:flex}
+      .brand{font-size:1rem}
+    }
+
+    /* When menu is closed, hide mobile menu via class (toggled by JS) */
+    .mobile-menu[aria-hidden="true"]{display:none}
+
+    /* Small polish: smooth transitions */
+    .mobile-menu{transition:opacity .18s ease,transform .18s ease}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Navigasi utama">
+        <div class="brand">
+          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><rect width='48' height='48' rx='8' fill='%2306b6d4'/><text x='24' y='30' font-size='20' font-family='Arial' text-anchor='middle' fill='white'>S</text></svg>" alt="Logo">
+          Situs Saya
+        </div>
+
+        <div class="spacer" aria-hidden="true"></div>
+
+        <!-- Link desktop -->
+        <div class="nav-links" role="menubar" aria-label="Menu">
+          <a href="#" role="menuitem">Beranda</a>
+          <a href="#" role="menuitem">Fitur</a>
+          <a href="#" role="menuitem">Harga</a>
+          <a href="#" role="menuitem">Kontak</a>
+          <a href="#" class="btn" role="menuitem">Daftar</a>
+        </div>
+
+        <!-- Hamburger untuk mobile -->
+        <button class="hamburger" aria-controls="mobile-menu" aria-expanded="false" aria-label="Buka menu">☰</button>
+      </nav>
+
+      <!-- Mobile menu (terkunci default hidden) -->
+      <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+        <a href="#">Beranda</a>
+        <a href="#">Fitur</a>
+        <a href="#">Harga</a>
+        <a href="#">Kontak</a>
+        <a href="#" class="btn">Daftar</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding:2rem 1rem">
+    <h1>Contoh Halaman</h1>
+    <p>Navbar ini dibuat dengan Flexbox dan media query. Resize layar untuk melihat perilaku responsifnya.</p>
+  </main>
+
+  <script>
+    // Toggle mobile menu
+    (function(){
+      const btn = document.querySelector('.hamburger');
+      const mobile = document.getElementById('mobile-menu');
+
+      if(!btn || !mobile) return;
+
+      btn.addEventListener('click', ()=>{
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        mobile.setAttribute('aria-hidden', String(expanded));
+      });
+
+      // Close the mobile menu when focus leaves (optional nicer UX)
+      document.addEventListener('click', (e)=>{
+        if(!mobile.contains(e.target) && !btn.contains(e.target) && window.innerWidth <= 768){
+          btn.setAttribute('aria-expanded','false');
+          mobile.setAttribute('aria-hidden','true');
+        }
+      });
+
+      // Keyboard shortcut: Esc to close
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape'){
+          btn.setAttribute('aria-expanded','false');
+          mobile.setAttribute('aria-hidden','true');
+          btn.focus();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
